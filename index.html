@@ -332,14 +332,14 @@ import { getFirestore, doc, getDoc, setDoc, addDoc, deleteDoc, collection, onSna
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 // ── Firebase ──────────────────────────────────────────────────────────────────
-const firebaseConfig = {
+const fbApp = initializeApp({
   apiKey: "AIzaSyBkb-5giOfxXvpT-kT_y6ojXOZrpgMEMDs",
   authDomain: "gastos-p-221f3.firebaseapp.com",
   projectId: "gastos-p-221f3",
   storageBucket: "gastos-p-221f3.firebasestorage.app",
   messagingSenderId: "349118270380",
   appId: "1:349118270380:web:a29a3bc4d8117767f7c809"
-};
+});
 const db = getFirestore(fbApp);
 
 // ── Sueldo propio (independiente) ─────────────────────────────────────────────
@@ -850,11 +850,19 @@ window.setGTab=function(tab){
   if(tab==='evol'){renderBarChart()}
 };
 
-// Inicialización de fecha de hoy en el nuevo input
-document.getElementById('inp-fecha').value = now.toISOString().split('T')[0];
+// Inicialización — esperar a que el DOM esté completamente listo
+function initApp() {
+  const fechaEl = document.getElementById('inp-fecha');
+  if (fechaEl) fechaEl.value = now.toISOString().split('T')[0];
+  updateMonthUI();
+  listenGPData();
+}
 
-updateMonthUI();
-listenGPData();
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initApp);
+} else {
+  initApp();
+}
 </script>
 </body>
 </html>
